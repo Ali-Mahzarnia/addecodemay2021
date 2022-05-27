@@ -49,12 +49,10 @@ boootcca=function(x=image, z=riskfactors,
   
   lowerconfcor= quantile(corboots,  alpha/2)
   higherconfcor=quantile(corboots,  1-alpha/2)
-  zstat=mean(corboots)/sd(corboots)
-  pvalu=2*pnorm(abs(zstat), lower.tail = FALSE)
+ 
 returnlist=list( 'corboots'=corboots,  'uboots'=uboots, 
                  'vboots'=vboots, 'lowerconfcor'=lowerconfcor,
-                'higherconfcor'=higherconfcor,
-                'zstat'=zstat, 'pvalu'=pvalu )
+                'higherconfcor'=higherconfcor )
 return(returnlist)
   
 }
@@ -71,18 +69,8 @@ nsim=1000, alpha=0.05, samplesize=dim(image)[1] )
 
 boot$lowerconfcor
 boot$higherconfcor
-boot$zstat
-boot$pvalu
+
 
 
 apply(boot$vboots, 1, quantile, probs = c(0.025))
 apply(boot$vboots, 1, quantile, probs = c(0.975))
-statsv=apply(boot$vboots, 1, mean)/apply(boot$vboots, 1, sd)
-statsv
-2*pnorm(abs(statsv), lower.tail = FALSE)
-
-
-
-#### permutation confindence intervals
-# quantile(perm.out$corperms,  0.025)
-# quantile(perm.out$corperms,  0.975)

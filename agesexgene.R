@@ -175,17 +175,10 @@ out <- CCA(x=image,z=riskfactors,typex="standard",typez="standard",
 print(out) # could do print(out,verbose=TRUE)
 
 u=out$u
-out$standardu[out$standardu!=0] #if all inf then all are significant
-out$standardv[out$standardv!=0] #none are inf becasue effect of sex is taken oiut
-out$SDu[out$SDu!=0]
-#u=coef
-pvalsv=out$pvalsv
-v=out$v
-out$pvalsv[out$pvalsv!=1]
-out$pvalsu[out$pvalsu!=1]
-max(out$pvalsu[out$pvalsu!=1])
 
-stdv=out$standardv
+v=out$v
+
+
 
 sum(u==0)
 #len=length(u)

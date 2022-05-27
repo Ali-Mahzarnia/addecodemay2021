@@ -24,12 +24,9 @@ data2=readMat(path2, fixNames=TRUE)
 response=data2$response.array 
 
 
-# 'MRI_Exam', 'sex', 'age', 'Weight', 'risk_for_ad', 'genotype'
 
-#riskfactors=matrix(NA,  dim(response)[1], (dim(response)[2]-1))
 riskfactors=matrix(NA,  (dim(response)[1]), (dim(response)[2]-1)) #
-# 'sex', 'age', 'Weight', 'risk_for_ad', 'genotype'
-#sum(riskfactors[,2]==3)
+
 
 
 subjnameofconnectivity=data$subjlist
@@ -52,7 +49,6 @@ temp=temp[-c(9)] # mri exams gone
 colnames(riskfactors)=temp
 riskfactorsorig=riskfactors
 
-#riskfactors=riskfactors[,c(14:19)] # bensons only
 
 cor=cor(riskfactors)
 
@@ -71,8 +67,7 @@ write.xlsx2(corresult, "cor.xlsx")
 
 
 
-######## pull all ad as mci
-######## pull all ad as mci
+######## all ad as mci
 famindex=which(colnames(riskfactorsorig)=="risk_for_ad")
 tempaaa=riskfactorsorig[,famindex]
 tempaaa[tempaaa==3]=2
@@ -80,10 +75,6 @@ riskfactors[,famindex]=tempaaa
 riskfactorsorig[,famindex]=riskfactors[,famindex]
 #########
 
-
-#riskfactorind=riskfactors>0
-#sum(riskfactorind)
-#riskfactors=riskfactors[riskfactorind,] # removing riskfactor 2,3
 
 
 image=matrix(NA,  dim(connectivity)[3], len) # -6 becasue of cfs removal
@@ -99,7 +90,7 @@ dim(image)
 
 #image=image[riskfactorind,]
 
-#recordzerocols # these are zero cols that we remove and add at the edn 
+#recordzerocols # these are zero cols that we remove and add at the end 
 # we rmove now because cca needs to standardize and sd of them are zero
 indd=0
 for (i in 1:dim(image)[2]) if(sd(image[,i])==0 ) {indd=rbind(indd,i);  cat ( i , sd(image[,i]), "\n" );}
@@ -120,8 +111,7 @@ if (length(inddz)>1){
 ageind=which(colnames(riskfactorsorig)=="age")
 medianage=median(riskfactorsorig[,ageind])
 agecat=riskfactorsorig[,ageind];agecat[agecat<=medianage]=1;agecat[agecat>medianage]=2   #agecat
-#riskfactors=riskfactors[,c(5,9)] # NO WEIGHT it is sex, age, diet, gene
-#riskfactors[,2]=agecat;
+
 
 
 
@@ -138,8 +128,6 @@ for (i in 1:100) {
                              alpha = alpha, intercept=FALSE) ### ALREADY NO INTERCEPT
   
   cv=cvs[[i]]
-  #temperr=as.numeric( predict(cv, image, s=cv$lambda.min, type="response")) - riskfactors[,ageind]
-  #temperr=sqrt(temperr%*%temperr/length(temperr))
   temperr=min(cv$cvm)
   temper[i,]=c(temperr, 
                alpha, 
@@ -147,12 +135,6 @@ for (i in 1:100) {
   cat( temper[i,], "\n")
   #cat( i, "\n")
 }
-# min(temper[,1])
-# mins=temper[,1]
-# mins=mins[temper[,3]<500]
-# mins=mins[mins!=0]
-#alphaindex=which( temper[,1]==min(mins) & temper[,1]!=0   )
-
 
 
 alphaindex=which( temper[,1]==min(temper[,1])   )
@@ -263,7 +245,6 @@ pathnames='/Users/ali/Desktop/apr/sccapapr/anatomyInfo_whiston_new.csv'
 datanmes=read.csv(pathnames, header = TRUE, sep = ",", quote = "")
 datanmes$ROI
 
-#noreadcsf=c(148,152,161,314,318,327) # dont read csf already in matlab
 
 #datanmes=datanmes[-noreadcsf]
 
@@ -604,8 +585,4 @@ theme(aspect.ratio=1)
 library(ggplot2)
 ggsave("agepred.png", plot = last_plot(), 
        device='png', scale=3, width=12, height=12, unit=c("cm"), dpi=200)
-# 
-# family=as.character(family)
-# qplot(truey, yhat, colour = GenoTypes)
-# 
-# plot(x=truey,y)
+

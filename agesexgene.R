@@ -157,17 +157,10 @@ out2
 sum(out$u!=0)
 out2$v
 
-perm.out <- CCA.permute(x=image,z=riskfactors,typex="standard",typez="standard",nperms=101, standardize=TRUE, SD=TRUE, penaltyxs = xlamb, penaltyzs = zlamb)
 
-
-
-
-print(perm.out)
-
-plot(perm.out)
 
 out <- CCA(x=image,z=riskfactors,typex="standard",typez="standard",
-           penaltyx=perm.out$bestpenaltyx,penaltyz=perm.out$bestpenaltyz, UVperms= perm.out$UVperms, allpenaltyxs = perm.out$penaltyxs)
+           penaltyx=xlamb,penaltyz=zlamb)
 
 
 

@@ -476,14 +476,14 @@ sexindex=which(colnames(riskfactorsorig)=="sex")
 Sex=riskfactorsorig[,sexindex]; Sex[Sex==1]="1M"; Sex[Sex==2]="2F"; 
 Sexname=Sex; Sexname[Sexname=="1M"]="Male" ;  Sexname[Sexname=="2F"]="Female";
 
-######## pull all ad as mci
+########  all ad as mci
 tempaaa=riskfactorsorig[,famindex]
 tempaaa[tempaaa==3]=2
 riskfactorsorig[,famindex]=tempaaa
 #########
 family=riskfactorsorig[,famindex];
 
-#### pull ad and mic together
+####  ad and mic together
 
 
 ###### here specify   

@@ -114,8 +114,7 @@ agecat=riskfactors[,ageind];agecat[agecat<=medianage]=1;agecat[agecat>medianage]
 #lets run
 
 #install.packages("PMA")
-#install.packages("https://gitlab.oit.duke.edu/am983/PMA2/-/archive/master/PMA2-master.tar.gz", repos = NULL, type="source")
-library(PMA2)
+library(PMA)
 
 
 

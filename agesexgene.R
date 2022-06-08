@@ -1,32 +1,33 @@
 
-#run this right after running matlab that would produce the connectivity data by reading and re-arranging
+#run this right after running the matlab reader file that would produce the connectivity data array by reading and re-arranging
 #install.packages("R.matlab")
 library(R.matlab)
-path="~/resultsconnectivity_all_ADDecode_Dipy.mat"
-path2="~/resultsresponse_array.mat"
+path="~/resultsconnectivity_all_ADDecode_Dipy.mat" # path to connectomes
+path2="~/resultsresponse_array.mat" # path to response array or risk traits
 
 
-data=readMat(path)
-connectivity=data$connectivity
+data=readMat(path) # read connectome as a data frame
+connectivity=data$connectivity # extract connectome as an array 
 
 
-temp=connectivity[,,1]
-indexlower=lower.tri(temp, diag=FALSE)
-indexlowertrue=which(indexlower==TRUE)
-temp=temp[indexlower]
-len=sum(indexlower)  
+temp=connectivity[,,1] # make a temporary connectome matrix similar to first subject
+indexlower=lower.tri(temp, diag=FALSE) # assign lower triangle index of the connectivity matrix (of the temp) as true or False   
+indexlowertrue=which(indexlower==TRUE) # extract and flatten the lower triangle index
+temp=temp[indexlower] # extract lower triangle values 
+len=sum(indexlower)  #leng must be n*n-1/2
 
 
 
-data2=readMat(path2, fixNames=TRUE)
-response=data2$response.array 
+data2=readMat(path2, fixNames=TRUE) # read response or risk traits data
+response=data2$response.array  #extract risk traits data
 
-riskfactors=matrix(NA,  (dim(response)[1]), (dim(response)[2]-1)) #
+riskfactors=matrix(NA,  (dim(response)[1]), (dim(response)[2]-1)) # initiate risk triat array except for dwi id of it (-1)
 # 'sex', 'age', 'genotype'
 
 
-subjnameofconnectivity=data$subjlist
+subjnameofconnectivity=data$subjlist # the connectome data that was extracted has subject list as well
 
+#fill in the risk factor with response values except with dwi number [-c(9)]
 for (i in 1:dim(riskfactors)[1]) {
   ind=which(response[i,9]==subjnameofconnectivity)
   if (i!=ind) cat("here", i)
@@ -36,7 +37,7 @@ for (i in 1:dim(riskfactors)[1]) {
 }
 
 
-###covar names as well:
+### compute ther corrolation and assign names of risk factors:
 pathnames0="~/resultsresponse_tablename.mat"
 temp=readMat(pathnames0, fixNames=T)
 temp=unlist(temp$varnames)
@@ -73,7 +74,7 @@ riskfactorsorig[,famindex]=tempaaa
 
 
 
-image=matrix(NA,  dim(connectivity)[3], len) # -6 becasue of cfs removal
+image=matrix(NA,  dim(connectivity)[3], len) # image is flattened connectiviy matrices
 
 for (i in 1:dim(connectivity)[3]){
   temp=connectivity[,,i]
@@ -85,7 +86,7 @@ dim(image)
 
 
 #recordzerocols # these are zero cols that we remove and add at the end 
-# we rmove now because cca needs to standardize and sd of them are zero
+# we remove now because cca needs to standardize and sd of them are zero, later we add them as zero results of cca
 indd=0
 for (i in 1:dim(image)[2]) if(sd(image[,i])==0 ) {indd=rbind(indd,i);  cat ( i , sd(image[,i]), "\n" );}
 if (length(indd)>1){
